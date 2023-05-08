@@ -73,3 +73,10 @@ File closed.
 ==13317== For lists of detected and suppressed errors, rerun with: -s
 ==13317== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 ```
+
+## How does it works ?
+
+This C defer implementation uses GCC's nested functions extension, to declare a function with the body of your `DEFER`, and then declare a useless variable, with the `cleanup` GCC's attribute, so the previously defined nested function is called at the end of the scope.
+
+> **NOTE**
+> For Clang, some work remains to be done since nested functions are not allowed. The Clang implementation will probably use Blocks extension, wich needs `libblocksruntime-dev` (on Ubuntu).

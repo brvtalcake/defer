@@ -52,20 +52,32 @@
 #endif
 #define DEFER_SUB(x, y) ML99_EVAL(ML99_call(ML99_sub, v(x), v(y)))
 
-#if defined(DEFER)
-    #undef DEFER
-#endif
-#define DEFER                                          \
-    void DEFER_CAT(deferred_, __COUNTER__)(int *dummy) \
-    {                                                  \
-        (void)dummy;
+#if defined(__GNUC__) // Here is GCC's implementation
 
-#if defined(END_DEFER)
-    #undef END_DEFER
+    #if defined(DEFER)
+        #undef DEFER
+    #endif
+    #define DEFER                                          \
+        void DEFER_CAT(deferred_, __COUNTER__)(int *dummy) \
+        {                                                  \
+            (void)dummy;
+
+    #if defined(END_DEFER)
+        #undef END_DEFER
+    #endif
+    #define END_DEFER                                                                           \
+        ;};                                                                                     \
+        int DEFER_CAT(DEFER_CAT(deferred_, DEFER_ID(DEFER_SUB(__COUNTER__, 1))), _dummy)        \
+        __attribute__((cleanup(DEFER_CAT(deferred_, DEFER_ID(DEFER_SUB(__COUNTER__, 2)))))) = 0
+
+#else // Here is Clang's implementation
+
+    #if defined(DEFER)
+        #undef DEFER
+    #endif
+
+    _Static_assert(0, "Clang's implementation is not implemented yet");
+
 #endif
-#define END_DEFER                                                                           \
-    ;};                                                                                     \
-    int DEFER_CAT(DEFER_CAT(deferred_, DEFER_ID(DEFER_SUB(__COUNTER__, 1))), _dummy)        \
-    __attribute__((cleanup(DEFER_CAT(deferred_, DEFER_ID(DEFER_SUB(__COUNTER__, 2)))))) = 0
 
 #endif // DEFER_H
