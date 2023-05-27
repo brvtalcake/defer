@@ -34,6 +34,8 @@ $ gcc test.c -Imetalang99/include/ -o test && ./test
 > **Warning**
 > 
 > **Do NOT use the `__COUNTER__` macro between a `DEFER` and its corresponding `END_DEFER`, and (of course), do NOT nest `DEFER`s.**
+>
+> Moreover, all limitations in the content of any `DEFER` / `END_DEFER` block are the same as the ones for functions attached to variables with [GCC's `cleanup` attribute](https://gcc.gnu.org/onlinedocs/gcc/Common-Variable-Attributes.html#index-cleanup-variable-attribute).
 
 You can even run Valgrind to make sure the `FILE` has been deallocated. On my machine, I get :
 
