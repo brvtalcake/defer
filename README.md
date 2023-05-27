@@ -31,6 +31,10 @@ $ gcc test.c -Imetalang99/include/ -o test && ./test
   File f closed.
 ```
 
+> **Warning**
+> 
+> **Do NOT use the `__COUNTER__` macro between a `DEFER` and its corresponding `END_DEFER`, and (of course), do NOT nest `DEFER`s.**
+
 You can even run Valgrind to make sure the `FILE` has been deallocated. On my machine, I get :
 
 ```shell
